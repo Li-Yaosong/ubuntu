@@ -1,0 +1,22 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Login the Docker Hub
+      run: docker login --username liyaosong1@qq.com --password ${{ secrets.DOCKER_HUB_PASS }}
+    - name: Build the Docker image
+      run: docker manifest create liyaosong/ubuntu:bionic --amend liyaosong/ubuntu:bionic-amd64 --amend liyaosong/ubuntu:bionic-arm64 
+    - name: Push the Docker image
+      run: docker manifest push liyaosong/ubuntu:bionic
