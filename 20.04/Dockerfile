@@ -2,17 +2,31 @@ FROM liyaosong/debootstrap AS build
 
 USER root
 
+ENV AMD_BASE_URL=http://mirrors.ustc.edu.cn/ubuntu/
+ENV ARM_BASE_URL=http://mirrors.ustc.edu.cn/ubuntu-ports/
 RUN echo '#!/bin/bash' >> /install-root.sh
-RUN echo 'export AMD_BASE_URL=http://mirrors.ustc.edu.cn/ubuntu/' >> /install-root.sh
-RUN echo 'export ARM_BASE_URL=http://mirrors.ustc.edu.cn/ubuntu-ports/' >> /install-root.sh
 RUN echo 'if [ `uname -m` == "aarch64" ]; then' >> /install-root.sh
 RUN echo '    export BASE_URL=${ARM_BASE_URL}' >> /install-root.sh
 RUN echo 'else' >> /install-root.sh
 RUN echo '    export BASE_URL=${AMD_BASE_URL}' >> /install-root.sh
 RUN echo 'fi' >> /install-root.sh
-RUN echo 'debootstrap --variant=minbase focal ubuntu-root ${BASE_URL}' >> /install-root.sh
+RUN echo 'debootstrap --variant=minbase --components=main,restricted,universe,multiverse focal ubuntu-root ${BASE_URL}' >> /install-root.sh
 
 RUN chmod +x /install-root.sh && /install-root.sh
+
+RUN echo '#!/bin/bash' >> /insert-sources.sh
+RUN echo 'if [ `uname -m` == "aarch64" ]; then' >> /insert-sources.sh
+RUN echo '    export BASE_URL=${ARM_BASE_URL}' >> /insert-sources.sh
+RUN echo 'else' >> /insert-sources.sh
+RUN echo '    export BASE_URL=${AMD_BASE_URL}' >> /insert-sources.sh
+RUN echo 'fi' >> /insert-sources.sh
+RUN echo 'echo "# deb-src ${BASE_URL} focal main restricted universe multiverse" >> /ubuntu-root/etc/apt/sources.list' >> /insert-sources.sh
+RUN echo 'echo "deb ${BASE_URL} focal-updates main restricted universe multiverse" >> /ubuntu-root/etc/apt/sources.list' >> /insert-sources.sh
+RUN echo 'echo "# deb-src ${BASE_URL} focal-updates main restricted universe multiverse" >> /ubuntu-root/etc/apt/sources.list' >> /insert-sources.sh
+RUN echo 'echo "deb ${BASE_URL} focal-backports main restricted universe multiverse" >> /ubuntu-root/etc/apt/sources.list' >> /insert-sources.sh
+RUN echo 'echo "# deb-src ${BASE_URL} focal-backports main restricted universe multiverse" >> /ubuntu-root/etc/apt/sources.list' >> /insert-sources.sh
+
+RUN chmod +x /insert-sources.sh && /insert-sources.sh
 
 RUN chroot ubuntu-root apt-get update && \
     chroot ubuntu-root apt-get upgrade -y && \
