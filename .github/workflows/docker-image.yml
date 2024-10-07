@@ -21,3 +21,8 @@ jobs:
     - name: Build and push
       run: |
         docker buildx build --sbom=true --provenance=true --platform linux/amd64,linux/arm64 --tag liyaosong/ubuntu:bionic 18.04 --push
+        docker manifest create liyaosong/ubuntu:18.04 liyaosong/ubuntu:bionic
+        docker manifest push liyaosong/ubuntu:18.04
+        docker buildx build --sbom=true --provenance=true --platform linux/amd64,linux/arm64 --tag liyaosong/ubuntu:focal 20.04 --push
+        docker manifest create liyaosong/ubuntu:20.04 liyaosong/ubuntu:focal
+        docker manifest push liyaosong/ubuntu:20.04
