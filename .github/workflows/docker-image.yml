@@ -20,9 +20,5 @@ jobs:
       run: echo "${{ secrets.DOCKER_HUB_PASS }}" | docker login -u "liyaosong1@qq.com" --password-stdin
     - name: Build and push
       run: |
-        docker buildx build --sbom=true --provenance=true --platform linux/amd64,linux/arm64 --tag liyaosong/ubuntu:bionic 18.04 --push
-        docker manifest create liyaosong/ubuntu:18.04 --amend liyaosong/ubuntu:bionic
-        docker manifest push liyaosong/ubuntu:18.04
-        docker buildx build --sbom=true --provenance=true --platform linux/amd64,linux/arm64 --tag liyaosong/ubuntu:focal 20.04 --push
-        docker manifest create liyaosong/ubuntu:20.04 --amend liyaosong/ubuntu:focal
-        docker manifest push liyaosong/ubuntu:20.04
+        docker buildx build --sbom=true --provenance=true --platform linux/amd64,linux/arm64 --tag liyaosong/ubuntu:bionic --tag liyaosong/ubuntu:18.04 18.04 --push
+        docker buildx build --sbom=true --provenance=true --platform linux/amd64,linux/arm64 --tag liyaosong/ubuntu:focal --tag liyaosong/ubuntu:20.04 20.04 --push
