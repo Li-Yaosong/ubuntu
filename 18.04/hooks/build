@@ -6,7 +6,4 @@ export DOCKER_BUILDKIT=1
 # 设置 Buildx Builder 并启用 sbom 和 provenance
 docker buildx create --use
 
-export AMD_BASE_URL=http://mirrors.ustc.edu.cn/ubuntu/
-export ARM_BASE_URL=http://mirrors.ustc.edu.cn/ubuntu-ports/
-
-docker buildx build --sbom=true --provenance=true --build-arg BASE_URL=${AMD_BASE_URL} -t $IMAGE_NAME-amd64 . --push
+docker buildx build --sbom=true --provenance=true -t $IMAGE_NAME-amd64 .
