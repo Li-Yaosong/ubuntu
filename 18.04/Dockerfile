@@ -5,12 +5,12 @@ USER root
 RUN debootstrap \
     --variant=minbase bionic ubuntu-root ${BASE_URL}
 
-# RUN chroot ubuntu-root apt-get update && \
-#     chroot ubuntu-root apt-get upgrade -y && \
-#     chroot ubuntu-root apt-get autoremove -y && \
-#     chroot ubuntu-root apt-get clean
+RUN chroot ubuntu-root apt-get update && \
+    chroot ubuntu-root apt-get upgrade -y && \
+    chroot ubuntu-root apt-get autoremove -y && \
+    chroot ubuntu-root apt-get clean
     
-# RUN chroot ubuntu-root useradd -m ubuntu
+RUN chroot ubuntu-root useradd -m ubuntu
 
 RUN rm -rf \
     ubuntu-root/var/lib/apt/lists/* \
