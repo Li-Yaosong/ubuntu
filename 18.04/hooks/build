@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# 启用 BuildKit
+export DOCKER_BUILDKIT=1
+
+# 设置 Buildx Builder 并启用 sbom 和 provenance
+docker buildx create --use
+
+export AMD_BASE_URL=http://mirrors.ustc.edu.cn/ubuntu/
+export ARM_BASE_URL=http://mirrors.ustc.edu.cn/ubuntu-ports/
+
+docker buildx build --sbom=true --provenance=true --platform linux/amd64 --build-arg BASE_URL=${AMD_BASE_URL} -t $IMAGE_NAME-amd64 . --push
+docker buildx build --sbom=true --provenance=true --platform linux/arm64 --build-arg BASE_URL=${ARM_BASE_URL} -t $IMAGE_NAME-arm64 . --push
+
+docker manifest create $IMAGE_NAME --amend $IMAGE_NAME-amd64 --amend $IMAGE_NAME-arm64
+docker manifest push $IMAGE_NAME
