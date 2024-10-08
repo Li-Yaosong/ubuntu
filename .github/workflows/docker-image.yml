@@ -22,3 +22,5 @@ jobs:
       run: |
         docker buildx build --sbom=true --provenance=true --platform linux/amd64,linux/arm64 --tag liyaosong/ubuntu:bionic --tag liyaosong/ubuntu:18.04 18.04 --push
         docker buildx build --sbom=true --provenance=true --platform linux/amd64,linux/arm64 --tag liyaosong/ubuntu:focal --tag liyaosong/ubuntu:20.04 20.04 --push
+        docker buildx build --sbom=true --provenance=true --platform linux/amd64,linux/arm64 --tag liyaosong/ubuntu:jammy --tag liyaosong/ubuntu:22.04 22.04 --push
+        docker buildx build --sbom=true --provenance=true --platform linux/amd64,linux/arm64 --tag liyaosong/ubuntu:noble --tag liyaosong/ubuntu:24.04 24.04 --push
