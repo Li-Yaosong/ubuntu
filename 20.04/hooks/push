@@ -1,3 +1,0 @@
-#!/bin/bash
-
-echo "Pushing image to Docker Hub with tag $IMAGE_NAME succeeded"

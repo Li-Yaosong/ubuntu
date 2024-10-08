@@ -12,11 +12,9 @@ RUN echo '    export BASE_URL=${ARM_BASE_URL}' >> /install-root.sh
 RUN echo 'else' >> /install-root.sh
 RUN echo '    export BASE_URL=${AMD_BASE_URL}' >> /install-root.sh
 RUN echo 'fi' >> /install-root.sh
-RUN echo 'debootstrap --variant=minbase --components=main,restricted,universe,multiverse ${NAME} ubuntu-root ${BASE_URL}' >> /install-root.sh
+RUN echo 'debootstrap --variant=minbase --extra-suites=${NAME}-updates,${NAME}-backports --components=main,restricted,universe,multiverse ${NAME} ubuntu-root ${BASE_URL}' >> /install-root.sh
 RUN echo 'echo "# deb-src ${BASE_URL} ${NAME} main restricted universe multiverse" >> /ubuntu-root/etc/apt/sources.list' >> /install-root.sh
-RUN echo 'echo "deb ${BASE_URL} ${NAME}-updates main restricted universe multiverse" >> /ubuntu-root/etc/apt/sources.list' >> /install-root.sh
 RUN echo 'echo "# deb-src ${BASE_URL} ${NAME}-updates main restricted universe multiverse" >> /ubuntu-root/etc/apt/sources.list' >> /install-root.sh
-RUN echo 'echo "deb ${BASE_URL} ${NAME}-backports main restricted universe multiverse" >> /ubuntu-root/etc/apt/sources.list' >> /install-root.sh
 RUN echo 'echo "# deb-src ${BASE_URL} ${NAME}-backports main restricted universe multiverse" >> /ubuntu-root/etc/apt/sources.list' >> /install-root.sh
 
 RUN chmod +x /install-root.sh && /install-root.sh
