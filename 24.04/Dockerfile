@@ -1,11 +1,13 @@
-FROM ubuntu:24.04 AS build
+FROM liyaosong/debootstrap AS build
 
 ARG NAME=noble
+ARG HOST_URL=http://mirrors.ustc.edu.cn
 
 USER root
-RUN apt-get update && apt-get install -y debootstrap
-ENV AMD_BASE_URL=http://mirrors.ustc.edu.cn/ubuntu/
-ENV ARM_BASE_URL=http://mirrors.ustc.edu.cn/ubuntu-ports/
+
+ENV HOST_URL=${HOST_URL}
+ENV AMD_BASE_URL=${HOST_URL}/ubuntu/
+ENV ARM_BASE_URL=${HOST_URL}/ubuntu-ports/
 ENV NAME=${NAME}
 
 RUN echo '#!/bin/bash' >> /install-root.sh
@@ -51,7 +53,6 @@ RUN rm -rf \
     ubuntu-root/usr/share/doc/*/*.txt \
     ubuntu-root/usr/share/locale/*/LC_MESSAGES/*.mo 
 
-
 FROM scratch
 ARG VERSION=20.04
 LABEL maintainer="liyaosong <liyaosong1@qq.com>"
@@ -59,3 +60,4 @@ LABEL version=${VERSION}
 LABEL description="ubuntu image."
 
 COPY --from=build /ubuntu-root /
+CMD ["/bin/bash"]
